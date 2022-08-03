@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title Page-->
+    <title> Cloud Automotive Platform</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="/resource/css/font-face.css" rel="stylesheet" media="all">
+    <link href="/resource/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="/resource/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="/resource/vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="/resource/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet"
+        media="all">
+
+    <!-- Main CSS-->
+    <link href="/resource/css/theme.css" rel="stylesheet" media="all">
+
+    <link rel="stylesheet" href='/resource/css/popup.css' />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+</head>
+
+<body class="animsition">
+    <!-- Popup -->
+    <div id="Popup" class="popup">
+        <!-- popup content -->
+        <div class="popup-content">
+            <div class="popup-header">
+                <span class="close">&times;</span>
+                <h3>Header</h3>
+            </div>
+            <div class="popup-body">
+                <p>Body</p>
+            </div>
+        </div>
+    </div>
+    <!-- End Popup -->
+    <div class="page-wrapper">
+        <!-- HEADER -->
+        <header class="header-desktop3 d-none d-lg-block">
+            <div class="section__content section__content--p35">
+                <div class="header3-wrap">
+                    <h1 style="color: white;">Cloud Automotive Platform</h1>
+                    <div class="header__navbar" id="h-navbar">
+                        <ul class="list-unstyled">
+                            <li class="has-sub active" id="ivi-tab">
+                                <a href="#ivi" onclick="toggleHideShow_components([['data-containers-ivi','table'] ,['data-images-local-ivi','table'], ['data-images-downloadable-ivi','table'],
+                                    ['data-containers-cluster','none'], ['data-images-local-cluster','none'],  ['data-images-downloadable-cluster','none'],
+                                    ['data-containers-cockpit','none'], ['data-images-local-cockpit','none'], ['data-images-downloadable-cockpit','none'], 
+                                    ['attached-devices','block'], ['remote-devices','block'], ['help','block'],['downloadedImages-tooltip','none']])">
+                                    <span class="bot-line"></span>Android</a>
+                            </li>
+                            <li class="has-sub" id="cluster-tab">
+                                <a href="#cluster" onclick="toggleHideShow_components([['data-containers-cluster','table'], ['data-images-local-cluster','table'],['data-images-downloadable-cluster','table'],
+                                    ['data-containers-ivi','none'],['data-images-local-ivi','none'], ['data-images-downloadable-ivi','none'],
+                                    ['data-containers-cockpit','none'], ['data-images-local-cockpit','none'], ['data-images-downloadable-cockpit','none'],
+                                    ['attached-devices','none'],['remote-devices','none'],['help','none'],['downloadedImages-tooltip','none']])">
+                                    <span class="bot-line"></span>Cluster</a>
+                            </li>
+                            <li class="has-sub" id="cockpit-tab">
+                                <a href="#cockpit" onclick="toggleHideShow_components([['data-containers-cockpit','table'], ['data-images-local-cockpit','table'],['data-images-downloadable-cockpit','table'],
+                                    ['data-containers-cluster','none'], ['data-images-local-cluster','none'], ['data-images-downloadable-cluster','none'],
+                                    ['data-containers-ivi','none'],['data-images-local-ivi','none'], ['data-images-downloadable-ivi','none'],
+                                    ['attached-devices','block'],['remote-devices','block'],['help','block'],['downloadedImages-tooltip','inline-block']])">
+                                    <span class="bot-line"></span>Cockpit</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="header__tool">
+                        <div class="account-wrap">
+                            <div class="account-item account-item--style2 clearfix js-item-menu">
+                                <div class="content">
+                                    <a class="js-acc-btn" href="#">{{ current_user }}</a>
+                                </div>
+                                <div class="account-dropdown js-dropdown">
+                                    <div class="account-dropdown__footer">
+                                        <a onclick="logout(event)">
+                                            <i class="zmdi zmdi-power"></i>Logout</a>
+                                    </div>
+                                    <div class="account-dropdown__footer">
+                                        <a onclick="upload_image(event)" user-name="{{current_user}}">
+                                            <i class="zmdi zmdi-upload"></i>Upload custom image</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- END HEADER -->
+
+        <!-- MAIN CONTENT-->
+        <div class="page-content--bgf7">
+            <section class="p-t-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="title-5 m-b-35" style="display: inline-block;">{{ containers_title }}</h3>
+                            <i id="runninInst-tooltip" class="fa fa-info-circle" style="display: inline-block;" onmouseover=populateRunningInstancesInfoIconMsg(this) onmouseout=flushInfoIconMsg(this)>
+                            <span id="runningInst-tooltiptext" class="tooltiptext"></span>
+                            
+                            </i>
+                            <div class="table-responsive">
+                                <table id="data-containers-ivi" class="table table-data2">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Link</th>
+                                            <th>Image Name</th>
+                                            <th>ADB access</th>
+                                            <th>Telnet access</th>
+                                            <th>Healthy</th>
+                                            <th>Devices</th>
+                                            <th>Containers</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for instance in ivi_instances %}
+                                        <tr id="data-containers-ivi-row-{{ instance.id }}" class="tr-shadow">
+                                            <td>{{ instance.shown_id }}</td>
+                                            <td><a href={{ instance.link }} target=”_blank”> {{ instance.link }} </a>
+                                            </td>
+                                            <td>{{ instance.image_name }}</td>
+                                            <td>{{ instance.adb }}</td>
+                                            <td>{{ instance.telnet }}</td>
+                                            <td>{{ instance.healthy }}</td>
+                                            <td>{{ instance.devices }}</td>
+                                            <td>{{ instance.childs }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary" style="width: 120px;"
+                                                    data-tab="ivi" onclick="stop(event)"
+                                                    id="{{ instance.id }}">Stop</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <table id="data-containers-cluster" class="table table-data2" style="display: none">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Link</th>
+                                            <th>Image Name</th>
+                                            <th>Console access</th>
+                                            <th>Healthy</th>
+                                            <th>Devices</th>
+                                            <th>Containers</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for instance in cluster_instances %}
+                                        <tr id="data-containers-cluster-row-{{ instance.id }}" class="tr-shadow">
+                                            <td>{{ instance.shown_id }}</td>
+                                            <td><a href={{ instance.link }} target=”_blank”> {{ instance.link }} </a>
+                                            </td>
+                                            <td>{{ instance.image_name }}</td>
+                                            <td>{{ instance.adb }}</td>
+                                            <td>{{ instance.healthy }}</td>
+                                            <td>{{ instance.devices }}</td>
+                                            <td>{{ instance.childs }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary" style="width: 120px;"
+                                                    data-tab="cluster" onclick="stop(event)"
+                                                    id="{{ instance.id }}">Stop</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <table id="data-containers-cockpit" class="table table-data2" style="display: none">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Link</th>
+                                            <th>Image Name</th>
+                                            <th>ADB access</th>
+                                            <th>Telnet access</th>
+                                            <th>Healthy</th>
+                                            <th>Devices</th>
+                                            <th>Containers</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for instance in cockpit_instances %}
+                                        {% if instance|length > 1 %}
+                                        <tr id="data-containers-cockpit-row-{{ instance[0].id }}" class="tr-shadow">
+                                            <td>{{ instance[0].shown_id }}</td>
+                                            <td><a href={{ instance[0].link }} target=”_blank”> {{ instance[0].link }}
+                                                </a> <br> <a href={{ instance[1].link }} target=”_blank”> {{
+                                                    instance[1].link }} </a>
+                                            </td>
+                                            <td>{{ instance[0].image_name }} <br> {{ instance[1].image_name }}</td>
+                                            <td>{{ instance[0].adb }} <br> {{ instance[1].adb }}</td>
+                                            <td>{{ instance[0].telnet }} <br> {{ instance[1].telnet }} </td>
+                                            <td>{{ instance[0].healthy }} <br> {{ instance[1].healthy }} </td>
+                                            <td>{{ instance[0].devices }} <br> {{ instance[1].devices }} </td>
+                                            <td>{{ instance[0].childs }} <br> {{ instance[1].childs }} </td>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary" style="width: 120px;"
+                                                    data-tab="cockpit" onclick="stop_cockpit(event)"
+                                                    id="{{ instance[0].id }}">Stop</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% else %}
+                                        <tr id="data-containers-cockpit-row-{{ instance[0].id }}" class="tr-shadow">
+                                            <td>{{ instance[0].shown_id }}</td>
+                                            <td><a href={{ instance[0].link }} target=”_blank”> {{ instance[0].link }}
+                                                </a>
+                                            </td>
+                                            <td>{{ instance[0].image_name }} </td>
+                                            <td>{{ instance[0].adb }} </td>
+                                            <td>{{ instance[0].telnet }} </td>
+                                            <td>{{ instance[0].healthy }} </td>
+                                            <td>{{ instance[0].devices }} </td>
+                                            <td>{{ instance[0].childs }} </td>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary" style="width: 120px;"
+                                                    data-tab="cockpit" onclick="stop(event)"
+                                                    id="{{ instance[0].id }}">Stop</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>                                      
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <br>
+            <section class="p-t-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="title-5 m-b-35" style="display: inline-block;">{{ images_title }}</h3>
+                            <i id="downloadedImages-tooltip" class="fa fa-info-circle" style="display: none;"  onmouseover=setDownloadedImagesIconInfo(this) onmouseout=flushInfoIconMsg(this)>
+                                <span id="downloadedImages-tooltiptext" class="tooltiptext"></span>
+                                </i>
+                            <div class="table-responsive">
+                                <table id="data-images-local-ivi" class="table table-data2">
+                                    <thead>
+                                        <tr class="d-flex">
+                                            <th class="col-2">Android Version</th>
+                                            <th class="col-4">Image Name</th>
+                                            <th class="col-2">Devices</th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="border-bottom: 5px solid #bbb;">
+                                        {% for image in images_local_to_launch %}
+                                        <tr class="d-flex tr-shadow">
+                                            <td class="col-1">{{ image.version }}</td>
+                                            <td class="col-1"> </td>
+                                            <td class="col-4">{{ image.image_name }}</td>
+                                            <td class="col-2">
+                                                <table style="float: right;">
+                                                    <tbody>
+                                                        <tr id="devices-{{image.image_name}}"></tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td class="col-1">
+                                                <div class="btn-group dropdown" style="width: 120px;">
+                                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown"
+                                                        style="border-bottom-width: 0px; border-top-width: 0px;">
+                                                        Bind
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <div id="devices-menu-{{image.image_name}}">
+                                                            {% for device in attached_devices %}
+                                                            <a class="dropdown-item" id="{{device.port}}"
+                                                                onclick="add_device(event)" href="#">{{ device.vid_pid
+                                                                }}@{{ device.remote_address }}/{{ device.bus_id }}</a>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary launch-action"
+                                                    style="width: 105px;" data-tab="ivi" onclick="launch(event)"
+                                                    id="{{image.image_name}}">Launch</button>
+                                            </td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary launch-action"
+                                                    style="width: 120px;" onclick="delete_image(event)"
+                                                    data-image-name="{{image.image_name}}">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <table id="data-images-downloadable-ivi" class="table table-data2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="12">
+                                                <h3 class="title-5 m-b-35">Downloadable Images</h3>
+
+                                            </th>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <th class="col-2">Android Version</th>
+                                            <th class="col-5">Image Name</th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for image in ivi_images_remote_to_download %}
+                                        <tr class="d-flex">
+                                            <td class="col-2">{{ image.version }}</td>
+                                            <td class="col-5">{{ image.image_name }}</td>
+                                            <td class="col-1" style="padding: 15px; padding-top: 2%;">
+                                                <div class="text-ivi" data-image-name="{{image.image_name}}"></div>
+                                            </td>
+                                            <td class="col-1" style="padding: 15px; padding-top: 2%;">
+                                                <div class="progress-ivi"
+                                                    style="vertical-align:middle; height:20px; visibility:hidden;"
+                                                    data-image-name="{{image.image_name}}">
+                                                    <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated"
+                                                        role="progressbar"
+                                                        style="min-width: 0px; background-color:grey; vertical-align:middle;"
+                                                        aria-valuemin="0" aria-valuemax="100"
+                                                        data-image-name="{{image.image_name}}">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary download-action"
+                                                    style="width: 120px;" data-btn-type="ivi_download"
+                                                    data-image-name="{{image.image_name}}">Download</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <table id="data-images-local-cluster" class="table table-data2" style="display: none">
+                                    <thead>
+                                        <tr class="d-flex">
+                                            <th class="col-2">Cluster Version</th>
+                                            <th class="col-6">Image Name</th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="border-bottom: 5px solid #bbb;">
+                                        {% for image in images_clust_local_to_launch %}
+                                        <tr class="d-flex tr-shadow">
+                                            <td class="col-2">{{ image.version }}</td>
+                                            <td class="col-6">{{ image.image_name }}</td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary launch-action"
+                                                    style="width: 105px;" data-tab="cluster" onclick="launch(event)"
+                                                    id="{{image.image_name}}">Launch</button>
+                                            </td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary launch-action"
+                                                    style="width: 120px;" onclick="delete_image(event)"
+                                                    data-image-name="{{image.image_name}}">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tbody>
+                                </table>
+                                <table id="data-images-downloadable-cluster" class="table table-data2"
+                                    style="display: none">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="12">
+                                                <h3 class="title-5 m-b-35">Downloadable Images</h3>
+                                            </th>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <th class="col-2">Cluster Version</th>
+                                            <th class="col-5">Image Name</th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for image in cluster_images_remote_to_download %}
+                                        <tr class="d-flex">
+                                            <td class="col-2">{{ image.version }}</td>
+                                            <td class="col-5">{{ image.image_name }}</td>
+                                            <td class="col-1" style="padding: 15px; padding-top: 2%;">
+                                                <div class="text-cluster" data-image-name="{{image.image_name}}"></div>
+                                            </td>
+                                            <td class="col-1" style="padding: 15px; padding-top: 2%;">
+                                                <div class="progress-cluster"
+                                                    style="vertical-align:middle; height:20px; visibility:hidden;"
+                                                    data-image-name="{{image.image_name}}">
+                                                    <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated"
+                                                        role="progressbar"
+                                                        style="min-width: 0px; background-color:grey; vertical-align:middle;"
+                                                        aria-valuemin="0" aria-valuemax="100"
+                                                        data-image-name="{{image.image_name}}">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary download-action"
+                                                    style="width: 120px;" data-btn-type="cluster_download"
+                                                    data-image-name="{{image.image_name}}">Download</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <table id="data-images-local-cockpit" class="table table-data2" style="display: none">
+                                    <thead>
+                                        <tr class="d-flex">
+                                            <th class="col-1">Image Type</th>
+                                            <th class="col-1">Version</th>
+                                            <th class="col-4">Image Name</th>
+                                            <th class="col-2">Devices</th>
+                                            <th class="col-1"></th>
+                                            <th> <button class="btn btn-secondary" type="submit" id="launch"
+                                                    style="width: 120px;"
+                                                    onclick="launch_cockpit(event)">Launch</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="border-bottom: 5px solid #bbb;">
+                                        {% for image in images_local_to_launch %}
+                                        <tr class="d-flex tr-shadow">
+                                            <td class="col-1">
+                                                <input type="checkbox" class="radio-ivi" name="IviLaunch"
+                                                    value="{{ image.image_name }}">
+                                                <label for="IviLaunch">&nbsp&nbsp;IVI</label><br>
+                                            </td>
+                                            <td class="col-1">{{ image.version }}</td>
+                                            <td class="col-4">{{ image.image_name }}</td>
+                                            <td class="col-2">
+                                                <table style="float: right;">
+                                                    <tbody>
+                                                        <tr id="devices-{{image.image_name}}"></tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td class="col-1">
+                                                <div class="btn-group dropdown" style="width: 120px;">
+                                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown"
+                                                        style="border-bottom-width: 0px; border-top-width: 0px;">
+                                                        Bind
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <div id="devices-menu-{{image.image_name}}">
+                                                            {% for device in attached_devices %}
+                                                            <a class="dropdown-item" id="{{device.port}}"
+                                                                onclick="add_device(event)" href="#">{{ device.vid_pid
+                                                                }}@{{ device.remote_address }}/{{ device.bus_id }}</a>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary launch-action"
+                                                    style="width: 120px;" onclick="delete_image(event)"
+                                                    data-image-name="{{image.image_name}}">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                        {% for image in images_clust_local_to_launch %}
+                                        <tr class="d-flex tr-shadow">
+                                            <td class="col-1">
+                                                <input type="checkbox" class="radio-cluster" name="ClusterLaunch"
+                                                    value="{{ image.image_name }}">
+                                                <label for="ClusterLaunch">&nbsp&nbsp;Cluster</label><br>
+                                            </td>
+                                            <td class="col-1">{{ image.version }}</td>
+                                            <td class="col-6">{{ image.image_name }}</td>
+                                            <td class="col-1">
+                                                <div class="btn-group dropdown" style="width: 120px;">
+
+                                                </div>
+                                            </td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary launch-action"
+                                                    style="width: 120px;" onclick="delete_image(event)"
+                                                    data-image-name="{{image.image_name}}">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <table id="data-images-downloadable-cockpit" class="table table-data2"
+                                    style="display: none">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="12">
+                                                <h3 class="title-5 m-b-35">Downloadable Images</h3>
+                                            </th>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <th class="col-2">Version</th>
+                                            <th class="col-5">Image Name</th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                            <th class="col-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for image in images_remote_to_download %}
+                                        <tr class="d-flex">
+                                            <td class="col-2">{{ image.version }}</td>
+                                            <td class="col-5">{{ image.image_name }}</td>
+                                            <td class="col-1" style="padding: 15px; padding-top: 2%;">
+                                                <div class="text-cockpit" data-image-name="{{image.image_name}}"></div>
+                                            </td>
+                                            <td class="col-1" style="padding: 15px; padding-top: 2%;">
+                                                <div class="progress-cockpit"
+                                                    style="vertical-align:middle; height:20px; visibility:hidden;"
+                                                    data-image-name="{{image.image_name}}">
+                                                    <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated"
+                                                        role="progressbar"
+                                                        style="min-width: 0px; background-color:grey; vertical-align:middle;"
+                                                        aria-valuemin="0" aria-valuemax="100"
+                                                        data-image-name="{{image.image_name}}">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="col-1">
+                                                <button type="button" class="btn btn-secondary download-action"
+                                                    style="width: 120px;" data-btn-type="cockpit_download"
+                                                    data-image-name="{{image.image_name}}">Download</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <br>
+            <section id="attached-devices" class="p-t-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="title-5 m-b-35">Attached devices</h3>
+                            <div class="table-responsive">
+                                <table id="attached-device-containers" class="table table-data2">
+                                    <thead>
+                                        <tr>
+                                            <th>Port</th>
+                                            <th>Remote Ip</th>
+                                            <th>Remote Bus Id</th>
+                                            <th>VID:PID</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for device in attached_devices %}
+                                        <tr id="attached-device-containers-row-{{ device.port }}" class="tr-shadow">
+                                            <td>{{ device.port }}</td>
+                                            <td>{{ device.remote_address }}</td>
+                                            <td>{{ device.bus_id }}</td>
+                                            <td>{{ device.vid_pid }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary" style="width: 120px;"
+                                                    onclick="detach(event)" id="{{ device.port }}">Detach</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <br>
+            <section id="remote-devices" class="p-t-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="title-5 m-b-35">Remote devices</h3>
+                            <div class="table-responsive">
+                                <table id="device-containers" class="table table-data2">
+                                    <thead>
+                                        <tr>
+                                            <th>Remote Ip</th>
+                                            <th>Bus Id</th>
+                                            <th>VID:PID</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for device in devices %}
+                                        <tr id="device-containers-row-{{ remote_addr }}/{{ device.bus_id }}"
+                                            class="tr-shadow">
+                                            <td>{{ remote_addr }}</td>
+                                            <td>{{ device.bus_id }}</td>
+                                            <td>{{ device.vid_pid }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary" style="width: 120px;"
+                                                    onclick="attach(event)"
+                                                    id="{{ remote_addr }}/{{ device.bus_id }}">Attach</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="spacer"></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <br>
+            <section id="help" class="p-t-20">
+                <div class="container">
+                    <h5>Help on binding remote devices (Linux only)</h5>
+                    <hr>
+                    <ol style="padding-left: 20px">
+                        <li>sudo apt install linux-tools-`uname -r` linux-cloud-tools-`uname -r`</li>
+                        <li>sudo insmod /lib/modules/`uname -r`/kernel/drivers/usb/usbip/usbip-core.ko</li>
+                        <li>sudo insmod /lib/modules/`uname -r`/kernel/drivers/usb/usbip/usbip-host.ko</li>
+                        <li>sudo usbip list -l</li>
+                        <li>sudo usbip bind -b &lt;busid&gt;</li>
+                        <li>sudo usbipd -D</li>
+                    </ol>
+                </div>
+            </section>
+        </div>
+        <!-- END MAIN CONTENT-->
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+
+    <script src="/resource/vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="/resource/vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <script src="/resource/vendor/animsition/animsition.min.js"></script>
+    <script src="/resource/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+
+    <script src="/resource/js/main.js"></script>
+
+    <script src="/resource/js/downloadProgress.js"></script>
+    <script src="/resource/js/restoreProgress.js"></script>
+
+    <script type=text/javascript>
+        function launch(event) {
+            id = event.target.id;
+            var instancetype = event.target.getAttribute("data-tab");
+            var devices = document.getElementById('devices-' + id)
+            var dev_ids = []
+            $(devices).find('td div').each(
+                function(a,b) {
+                    dev_ids.push(b.id)
+                }
+            )
+            var devs_str = encodeURIComponent(JSON.stringify(dev_ids));
+            $.getJSON('/launch/'+ id + '?devs=' + devs_str).complete(
+                function(data) {
+                    response = $.parseJSON(data.responseText)
+					if (response.error) {
+                        show_popup(response)
+                    }
+                    else {
+                        if(instancetype == "ivi")
+                        { var tr = $('<tr id="data-containers-ivi-row-' + response.id + '">');
+                         tr.append(
+                             $('<td>').text(response.shown_id),
+                             $('<td>').append($('<a href=' + response.link + ' target=”_blank” >').text(response.link)),
+                             $('<td>').text(response.image_name),
+                             $('<td>').text(response.adb),
+                             $('<td>').text(response.telnet),
+                             $('<td>').text(response.healthy),
+                             $('<td>').text(response.devices),
+                             $('<td>').text(response.childs),
+                             $('<td>').append(
+                                 $('<button type="button" class="btn btn-secondary" style="width: 120px;"  data-tab="ivi" onclick="stop(event)" id =' + response.id + '>Stop</button>')
+                             )
+                         );
+                         tr.appendTo('#data-containers-ivi');
+                       }  
+                         else 
+                         { var tr = $('<tr id="data-containers-cluster-row-' + response.id + '">');
+                             tr.append(
+                             $('<td>').text(response.shown_id),
+                             $('<td>').append($('<a href=' + response.link + ' target=”_blank” >').text(response.link)),
+                             $('<td>').text(response.image_name),
+                             $('<td>').text(response.adb),
+                             $('<td>').text(response.healthy),
+                             $('<td>').text(response.devices),
+                             $('<td>').text(response.childs),
+                             $('<td>').append(
+                                 $('<button type="button" class="btn btn-secondary" style="width: 120px;"  data-tab="cluster" onclick="stop(event)" id =' + response.id + '>Stop</button>')
+                             )
+                         );
+                         tr.appendTo('#data-containers-cluster');
+                          }
+						
+					}	
+                }
+            );
+        }
+    </script>
+    <script type=text/javascript>
+        function stop(event) {
+            id = event.target.id;
+            var instancetype = event.target.getAttribute("data-tab");
+            $.getJSON('/stop/'+ id).complete(
+                function(){
+                    if(instancetype == "ivi")
+                    {var row = document.getElementById("data-containers-ivi-row-" + id);}
+                    else if(instancetype == "cluster")                 
+                    {var row = document.getElementById("data-containers-cluster-row-" + id);}  
+                    else if(instancetype == "cockpit")  
+                    {var row = document.getElementById("data-containers-cockpit-row-" + id);}
+                    row.parentNode.removeChild(row);     
+                }
+            );
+        }
+    </script>
+    <script type=text/javascript>
+        function attach(event) {
+            id = event.target.id;
+            $.getJSON('/attach/'+ id).complete(
+                function(data) {
+                    response = $.parseJSON(data.responseText);
+                    var tr = $('<tr id="attached-device-containers-row-' + response.port + '">').append(
+                        $('<td>').text(response.port),
+                        $('<td>').text(response.remote_address),
+                        $('<td>').text(response.bus_id),
+                        $('<td>').text(response.vid_pid),
+                        $('<td>').append(
+                            $('<button type="button" class="btn btn-secondary" style="width: 120px;" onclick="detach(event)" id =' + response.port + '>Detach</button>')
+                        )
+                    );
+                    tr.appendTo('#attached-device-containers')
+
+                    var row = document.getElementById("device-containers-row-" + id);
+                    row.parentNode.removeChild(row);
+
+                    $("[id^=devices-menu-]").each(
+                        function() {
+                            $('<a class="dropdown-item" id="' + response.port + '" onclick="add_device(event)" href="#">').text(response.vid_pid + "@" + response.remote_address + "/" + response.bus_id).appendTo($(this))
+                        }
+                    )
+                }
+            );
+        }
+    </script>
+    <script type=text/javascript>
+        function detach(event) {
+            id = event.target.id;
+            $.getJSON('/detach/'+ id).complete(
+                function(data){
+                    response = $.parseJSON(data.responseText);
+                    var tr = $('<tr id="device-containers-row-' + response.remote_address + '/' + response.bus_id + '">').append(
+                        $('<td>').text(response.remote_address),
+                        $('<td>').text(response.bus_id),
+                        $('<td>').text(response.vid_pid),
+                        $('<td>').append(
+                            $('<button type="button" class="btn btn-secondary" style="width: 120px;" onclick="attach(event)" id =' + response.remote_address + '/' + response.bus_id + '>Attach</button>')
+                        )
+                    );
+                    tr.appendTo('#device-containers')
+
+                    var row = document.getElementById("attached-device-containers-row-" + id);
+                    row.parentNode.removeChild(row);
+
+                    $("[id^=devices-menu-]").each(
+                        function() {
+                            this.removeChild($(this).find('a#' + id).get(0))
+                        }
+                    )
+                }
+            );
+        }
+    </script>
+    <script type=text/javascript>
+        function add_device(event) {
+            id = event.srcElement.id
+            image_name = event.srcElement.parentElement.id.split('-')[2]
+            label = event.srcElement.innerText
+            if ($('#devices-' + image_name).find('td div:contains(' + label + ')')[0] === undefined) {
+                trow = event.path[5].children[3].children[0].children[0].children[0]
+                var td = $('<td>').append(
+                    $('<div id="' + id + '" class="sufee-alert alert with-close alert-dark alert-dismissible fade show">' + label + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>')
+                );
+                td.appendTo(trow)
+            }
+        }
+    </script>
+    <script type=text/javascript>
+        function logout(event) {
+            $.get( "/logout", function(data){ location.reload(); });
+        }
+    </script>
+    <script type=text/javascript>
+        function upload_image(event) {
+                var user_name = event.target.getAttribute("user-name")
+                console.log(user_name)
+                    $.getJSON('/upload/'+ user_name).complete(
+                    function(data) {
+                        response = $.parseJSON(data.responseText)
+                        if (response.error) {
+                            show_popup(response)
+                        }
+                        else {
+                            console.log(user_name + " successfully connected to uploader")
+                            window.open(new URL(response.url), '_blank').focus();
+                        }
+                    }
+                )
+            }
+    </script>
+    <script type=text/javascript>
+        $("input:checkbox").on('click', function() {
+            // in the handler, 'this' refers to the box clicked on
+            var $box = $(this);
+            if ($box.is(":checked")) {
+            // the name of the box is retrieved using the .attr() method
+            // as it is assumed and expected to be immutable
+            var group = "input:checkbox[name='" + $box.attr("name") + "']";
+            // the checked state of the group/box on the other hand will change
+            // and the current value is retrieved using .prop() method
+            $(group).prop("checked", false);
+            $box.prop("checked", true);
+            } else {
+            $box.prop("checked", false);
+            }
+        });
+        function launch_cockpit(event) {
+            if (!$("input[name='IviLaunch']").is(':checked') ||
+                !$("input[name='ClusterLaunch']").is(':checked')) {
+                alert('Please select both IVI and cluster');
+            } else { 
+                /* starts cockpit instance */
+                ivi_id = $('.radio-ivi:checked').val();
+                var devices = document.getElementById('devices-' + ivi_id);
+                var dev_ids = []
+                $(devices).find('td span').each(
+                    function(a,b) {
+                        dev_ids.push(b.ivi_id)
+                    }
+                )
+                var devs_str = encodeURIComponent(JSON.stringify(dev_ids));
+
+                cluster_id = $('.radio-cluster:checked').val();
+                get_str = '/launch/'+ ivi_id + '?devs=' + devs_str + '&cluster=' + cluster_id
+                $.getJSON(get_str).complete(
+                    function(data) {
+                        response = $.parseJSON(data.responseText);
+                        if (response.error) {
+                            show_popup(response)
+                        }  else {
+                            var tr = $('<tr id="data-containers-cockpit-row-' + response.ivi.id + '">').append(
+                                $('<td>').text(response.shown_id),
+                                $('<td>').html('<a href=' + response.ivi.link + ' target="_blank" >' + response.ivi.link + '</a><br> <a href=' + response.cluster.link + ' target="_blank" >' + response.cluster.link + '</a>'),
+                                $('<td>').html(response.ivi.image_name +' <br>' + response.cluster.image_name),
+                                $('<td>').html(response.ivi.adb +' <br>' + response.cluster.adb),
+                                $('<td>').html(response.ivi.telnet +' <br>' + response.cluster.telnet),
+                                $('<td>').html(response.ivi.healthy +' <br>' + response.cluster.healthy),
+                                $('<td>').html(response.ivi.devices +' <br>' + response.cluster.devices),
+                                $('<td>').html(response.ivi.childs +' <br>' + response.cluster.childs),
+                                $('<td>').append(
+                                    $('<button type="button" class="btn btn-secondary" style="width: 120px;" onclick="stop_cockpit(event)" id =' + response.ivi.id + '>Stop</button>')
+                                )
+                            );
+                            var spacer = $('<tr class="spacer"></tr>');
+    						tr.appendTo('#data-containers-cockpit');
+                            spacer.appendTo('#data-containers-cockpit');
+                        }
+                    }
+                );
+            }
+        }
+    </script>
+    <script type=text/javascript>
+        function stop_cockpit(event) {
+            id1 = event.target.id;
+            $.getJSON('/stop/'+ id1).complete(
+                function(){
+                    var row = document.getElementById("data-containers-cockpit-row-" + id1);
+                    row.parentNode.removeChild(row);
+                }
+            );
+            id2 = parseInt(id1) + 1;
+            $.getJSON('/stop/'+ id2 )
+        }
+    </script>
+    <script type=text/javascript>
+        function delete_image(event) {
+            var image_name = event.target.getAttribute("data-image-name")
+            label = event.srcElement.innerText
+            console.log(image_name+' '+label)
+            if(confirm('Confirm '+image_name+' image will be deleted?')) {
+                $.getJSON('/delete/'+ image_name).complete(
+                    function(data) {
+                        response = $.parseJSON(data.responseText)
+                        if (response.error) {
+                            show_popup(response)
+                        }
+                        else {
+                            location.reload()
+                        }
+                    }
+                )
+            }
+        }
+    </script>
+    <script type=text/javascript>
+        function show_popup(response) {
+            // Get the popup
+            var popup = document.getElementById("Popup")
+            $("#Popup .popup-header h3").html(response.error.reason)
+            $("#Popup .popup-body").html(response.error.description)
+            // Get the <span> element that closes the popup
+            var span = document.getElementsByClassName("close")[0]
+            // When the user clicks the button, open the popup
+            popup.style.display = "block";
+            // When the user clicks on <span> (x), close the popup
+            span.onclick = function() {
+                popup.style.display = "none"
+            }
+
+            // When the user clicks anywhere outside of the popup, close it
+            window.onclick = function(event) {
+                if (event.target == popup) {
+                    popup.style.display = "none"
+                }
+            }
+        }
+    </script>
+    <script type=text/javascript>
+        function toggleHideShow_components(sectionsToShow) {
+            var sectionsMap = new Map(sectionsToShow);
+            sectionsMap.forEach((value, key) => {
+                document.getElementById(key).style.display = value;
+            });
+
+        }
+    </script>
+    <script>
+        function setDownloadedImagesIconInfo(infoIcon){   // populates Downloaded Images info Icon on cockpit tab
+            let spanID="";
+            var childInfo = infoIcon.children;
+            for (var i = 0; i < childInfo.length; i++) {
+                if (childInfo[i].tagName == "SPAN") {   
+                     spanID=childInfo[i] 
+                 }
+            }
+            let hash=window.location.hash;
+            if(hash==="#cockpit"){
+                infoIcon.style.visibility="visible";
+                spanID.innerHTML="Select IVI and cluster to launch cockpit";
+                spanID.style.visibility="visible";
+            }
+            
+        }
+    </script>
+    <script>
+        function flushInfoIconMsg(infoIcon){  // clears msg on  info Icon
+            let spanID="";
+            var childInfo = infoIcon.children;
+            for (var i = 0; i < childInfo.length; i++) {
+                if (childInfo[i].tagName == "SPAN") {   
+                     spanID=childInfo[i] 
+                 }
+            }
+            spanID.style.visibility="hidden";
+           
+        }
+    </script>
+    <script type=text/javascript>
+        function populateRunningInstancesInfoIconMsg(infoIcon) {   // populates Running instances info Icon
+            let spanID="";
+            var childInfo = infoIcon.children;
+            let hash=window.location.hash
+            for (var i = 0; i < childInfo.length; i++) {
+                if (childInfo[i].tagName == "SPAN" ) {   
+                     spanID=childInfo[i] 
+                    
+                 }
+            }
+          
+            console.log(hash)
+           
+            if(hash === "#cluster")
+            {
+                spanID.innerHTML="Click on link to view Cluster";
+            }
+            else if(hash==='#ivi'){
+                spanID.innerHTML="Click on link to view Android";
+            }
+            else if(hash==="#cockpit"){
+              
+                spanID.innerHTML="Click on link to view Cockpit";
+               
+            }
+            else{  // this default case handles the first load
+                spanID.innerHTML="Click on link to view Android";
+            }
+            
+            spanID.style.visibility="visible";
+           
+        }
+    </script>
+    <script type=text/javascript>
+        $(document).ready(function () {
+            $('li').click(function () {
+                $('li.has-sub.active').removeClass("active");
+                $(this).addClass("active");
+                console.log(this.id)
+                window.restoreDownloadsAfterPageReload(this.id)
+            });
+            window.restoreDownloadsAfterPageReload(null)
+        });
+    </script>
+    <script type=text/javascript>
+        $(function() {
+            var hash = window.location.hash;
+            
+            if(hash === "#ivi")
+            {   
+                toggleHideShow_components([['data-containers-ivi','table'] ,['data-images-local-ivi','table'], ['data-images-downloadable-ivi','table'],
+                ['data-containers-cluster','none'], ['data-images-local-cluster','none'],  ['data-images-downloadable-cluster','none'],
+                ['data-containers-cockpit','none'], ['data-images-local-cockpit','none'], ['data-images-downloadable-cockpit','none'], 
+                ['attached-devices','block'], ['remote-devices','block'], ['help','block'],['downloadedImages-tooltip','none']]);
+                $('li.has-sub.active').removeClass("active");
+                document.getElementById("ivi-tab").classList.add("active");
+            }
+            if(hash === "#cluster")
+            {
+                toggleHideShow_components([['data-containers-cluster','table'], ['data-images-local-cluster','table'],['data-images-downloadable-cluster','table'],
+                ['data-containers-ivi','none'],['data-images-local-ivi','none'], ['data-images-downloadable-ivi','none'],
+                ['data-containers-cockpit','none'], ['data-images-local-cockpit','none'], ['data-images-downloadable-cockpit','none'],
+                ['attached-devices','none'],['remote-devices','none'],['help','none'],['downloadedImages-tooltip','none']]);
+                $('li.has-sub.active').removeClass("active");
+                document.getElementById("cluster-tab").classList.add("active");
+            }
+            if(hash === "#cockpit")
+            {
+                toggleHideShow_components([['data-containers-cockpit','table'], ['data-images-local-cockpit','table'],['data-images-downloadable-cockpit','table'],
+                ['data-containers-cluster','none'], ['data-images-local-cluster','none'], ['data-images-downloadable-cluster','none'],
+                ['data-containers-ivi','none'],['data-images-local-ivi','none'], ['data-images-downloadable-ivi','none'],
+                ['attached-devices','block'],['remote-devices','block'],['help','block'],['downloadedImages-tooltip','inline-block']]);
+                $('li.has-sub.active').removeClass("active");
+                document.getElementById("cockpit-tab").classList.add("active");
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+<!-- end document-->

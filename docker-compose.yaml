@@ -1,0 +1,86 @@
+version: "3.7"
+services:
+  envoy:
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-envoy:latest
+    container_name: titan-emulator-envoy
+    volumes:
+      - envoy_config:/var/lib/envoy
+    networks:
+      - envoymesh
+    extra_hosts:
+      - ${ENV_HOSTNAME}:${ENV_EXT_IP}
+    ports:
+      - 80:8080
+      - 19000:19000
+
+  nginx:
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-nginx:latest
+    container_name: titan-emulator-nginx
+    networks:
+      envoymesh:
+        aliases:
+          - nginx
+    expose:
+      - 80
+
+  backend-resource:
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-backend-resource:latest
+    container_name: titan-emulator-backend-resource
+    networks:
+      envoymesh:
+        aliases:
+          - backend-resource
+    expose:
+      - 80
+
+  backend:
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-backend:latest
+    container_name: titan-emulator-backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - envoy_config:/var/lib/envoy
+    environment:
+      - FLASK_APP=backend
+      - POOL_NODES=${ENV_POOL_NODES}
+      - TURN_EXTERNAL_IP=${ENV_EXT_IP}
+      - USBIP_RPC_URL=http://${ENV_EXT_IP}:8888
+      - DEBUG=1
+      - HOSTNAME=${ENV_HOSTNAME}
+      - AUTH_TEST_CREDS=test@test.com,user@test.com,admin@test.com
+      - ADMIN_GROUP_NAME=CloudCockpitPlatformAdmin 
+      - USER_GROUP_NAME='CloudCockpitPlatformUsersDev,CloudCockpitPlatformUsersTest,CloudCockpitPlatformDev'
+      - REMOTE_REGISTRY_USER=${ENV_REMOTE_REGISTRY_USER}
+      - REMOTE_REGISTRY_PASS=${ENV_REMOTE_REGISTRY_PASS}
+      - MAX_INSTANCES_PER_USER=4
+      - MAX_INSTANCES_PER_NODE=4
+      - SCHEDULER_JOB_HOUR=4
+      - SCHEDULER_JOB_MINUTE=30
+      - NUM_OF_REMOTE_IMAGES_PER_CAT=5
+      - UPLOAD_SERVER=${ENV_UPLOAD_SERVER}
+    networks:
+      envoymesh:
+        aliases:
+          - backend
+    expose:
+      - 8080
+
+  usbip:
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-backend-usbip-5.4.0-94-generic
+    container_name: titan-emulator-backend-usbip
+    privileged: true
+    environment:
+      - LOGLEVEL=DEBUG
+    networks:
+      envoymesh:
+        aliases:
+          - backend-usbip
+    ports:
+      - 8888:8888
+
+volumes:
+  envoy_config:
+    name: titan-emulator-envoy-config
+
+networks:
+  envoymesh:
+    name: titan-emulator-envoymesh

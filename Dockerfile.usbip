@@ -1,0 +1,19 @@
+FROM python:3.8-slim-buster
+
+# Values for args can be changed inline or applied with --build-arg option in the 'docker build' command
+# It is important to have these two agrs below aligned, for ex. linux-tools-5.4.0-77-generic is available in focal repo only
+# TODO: automate repo selection in accordance with kernel version?
+ARG KERNEL_VERSION=5.4.0-94-generic
+ARG REPO_NAME=focal
+
+# Install usbip
+RUN echo "deb [trusted=yes] http://us.archive.ubuntu.com/ubuntu/ ${REPO_NAME} main restricted" >> /etc/apt/sources.list
+RUN echo "deb [trusted=yes] http://security.ubuntu.com/ubuntu ${REPO_NAME}-security main" >> /etc/apt/sources.list
+RUN apt-get update && apt-get -y install linux-tools-${KERNEL_VERSION} linux-cloud-tools-${KERNEL_VERSION}
+
+# Install package itself
+COPY . .
+
+EXPOSE 8888
+
+CMD ["python3", "-m" , "usbip_client"]

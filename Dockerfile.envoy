@@ -1,0 +1,10 @@
+#FROM envoyproxy/envoy-dev:latest
+# Fix on certain version to not get nbc chagnes in config some time
+FROM envoyproxy/envoy:v1.20.0
+
+COPY envoy/configs/envoy.yaml /etc/envoy.yaml
+COPY envoy/configs/cds.yaml /var/lib/envoy/cds.yaml
+COPY envoy/configs/lds.yaml /var/lib/envoy/lds.yaml
+COPY jwt_secrets_pub.jwks /etc/jwt_secrets_pub.jwks
+RUN chmod go+x /var/lib/envoy && chmod go+r /etc/envoy.yaml /var/lib/envoy/*
+CMD ["/usr/local/bin/envoy", "-c /etc/envoy.yaml", "-l", "debug"]

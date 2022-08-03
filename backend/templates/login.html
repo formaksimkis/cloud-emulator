@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cloud Automotive Platform</title>
+        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+	</head>
+	
+	<body>
+		<div class="flex items-center min-h-screen bg-gray-50">
+			<div class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl">
+				<div class="flex flex-col md:flex-row">
+					<div class="h-32 md:h-auto md:w-1/2">
+						<img src="/resource/image/login_emulator.jpg" alt="img" class="object-cover w-full h-full" />
+					</div>
+					<div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
+						<div class="w-full">
+							<h1 class="mb-4 text-3xl font-bold text-center text-gray-700">
+								Cloud Automotive Platform
+							</h1>
+							<br>
+									
+							<form class="form-horizontal" action='' method="POST">
+								<fieldset>
+									<h5 class="pb-3">Please login</h5>
+													  
+									<div>
+										<label class="block text-sm" for="username">
+											Username
+										</label>
+										<input type="email" id="username" name="username"
+											class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
+											placeholder="username@ad.harman.com" />
+									</div>
+									<div>
+										<label class="block mt-4 text-sm" for="password">
+											Password
+										</label>
+										<input
+											class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
+											placeholder="" type="password" id="password" name="password"/>
+									</div>
+									
+									<button
+										class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-blue-600 border border-transparent rounded-lg active:bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue">
+										Login
+									</button>
+									{% if notallowed %}
+									<br>
+									<label class="control-label d-flex justify-content-center text-danger">
+										Login not permitted! Please contact admin.
+									</label>
+									{% endif %}
+									{% if failed %}
+									<br>
+									<label class="control-label d-flex justify-content-center text-danger">
+										Login failed!
+									</label>
+									{% endif %}
+								</fieldset>
+							</form>                
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</body>
+</html>

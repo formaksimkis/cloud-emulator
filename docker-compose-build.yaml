@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  envoy:
+    build:
+        context: .
+        dockerfile: Dockerfile.envoy
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-envoy:latest
+
+  backend-resource:
+    build:
+        context: .
+        dockerfile: Dockerfile.backend.resource
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-backend-resource:latest
+
+  backend:
+    build:
+        context: .
+        dockerfile: Dockerfile.backend
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-backend:latest

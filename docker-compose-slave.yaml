@@ -1,0 +1,24 @@
+version: "3.7"
+services:
+  backend-slave:
+    image: artifactory-mb.harman.com:5036/platform_cloud/${ENV_BUILD_TYPE}/titan-emulator-backend:latest
+    container_name: titan-emulator-backend-slave
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - FLASK_APP=node.slave
+      - DEBUG=1
+      - HOSTNAME=${ENV_HOSTNAME}
+      - TURN_EXTERNAL_IP=${ENV_EXT_IP}
+      - REMOTE_REGISTRY_USER=${ENV_REMOTE_REGISTRY_USER}
+      - REMOTE_REGISTRY_PASS=${ENV_REMOTE_REGISTRY_PASS}
+    networks:
+      envoymesh:
+        aliases:
+          - backend-slave
+    ports:
+      - 8080:8080
+
+networks:
+  envoymesh:
+    name: titan-emulator-envoymesh

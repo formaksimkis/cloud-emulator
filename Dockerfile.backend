@@ -1,0 +1,15 @@
+FROM python:3.8-slim-buster
+
+# Install dependencies
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
+# Install aux net tools
+RUN apt-get update && apt-get -y install net-tools iputils-ping netcat-traditional dnsutils curl
+
+# Install package itself
+COPY . .
+
+EXPOSE 8080
+
+CMD ["python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=8080"]

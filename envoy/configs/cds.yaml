@@ -1,0 +1,37 @@
+resources:
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  load_assignment:
+    cluster_name: backend
+    endpoints:
+    - lb_endpoints:
+      - endpoint:
+          address:
+            socket_address:
+              address: titan-emulator-backend
+              port_value: 8080
+  name: backend
+  type: STRICT_DNS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  load_assignment:
+    cluster_name: nginx
+    endpoints:
+    - lb_endpoints:
+      - endpoint:
+          address:
+            socket_address:
+              address: titan-emulator-nginx
+              port_value: 80
+  name: nginx
+  type: STRICT_DNS
+- '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
+  load_assignment:
+    cluster_name: backend-resource
+    endpoints:
+    - lb_endpoints:
+      - endpoint:
+          address:
+            socket_address:
+              address: titan-emulator-backend-resource
+              port_value: 80
+  name: backend-resource
+  type: STRICT_DNS
